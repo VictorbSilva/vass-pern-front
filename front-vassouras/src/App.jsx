@@ -1,13 +1,12 @@
-// import { useState } from 'react'
-
-import './App.css'
+import './App.css';
+import Vitrine from './components/vitrine.jsx';
 
 function App() {
-  // const [count, setCount] = useState(0)
-
   return (
-    <h1 className='text-3xl font-bold text-blue-600'>Testando Tailwind</h1>
-  )
+    <div className='min-h-screen bg-gray-50'>
+      <Vitrine />
+    </div>
+  );
 }
 
-export default App
+export default App;
