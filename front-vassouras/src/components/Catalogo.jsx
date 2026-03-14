@@ -53,7 +53,7 @@ function Catalogo() {
             idCategoria === null
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 text-gray-700'
-          } hover:bg-blue-400 transition-colors shrink-0`}
+          } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
         >
           Todos
         </button>
@@ -66,36 +66,44 @@ function Catalogo() {
               idCategoria === categoria.id
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 text-gray-700'
-            } hover:bg-blue-400 transition-colors shrink-0`}
+            } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
           >
             {categoria.nomeCategoria}
           </button>
         ))}
       </ul>
 
-      <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-        {produtos.map((produto) => (
-          <Link key={produto.id} to={`/produto/${produto.id}`}>
-            <li className='bg-white p-4 border rounded-lg shadow-sm hover:shadow-xl/20 transition-shadow'>
-              <div className='aspect-square bg-gray-100 mb-4 rounded-md flex items-center justify-center'>
-                {produto.imagemProduto ? (
-                  <img
-                    src={`${baseUrl}${produto.imagemProduto}`}
-                    alt={produto.nomeProduto}
-                    className='w-full h-full object-cover'
-                  />
-                ) : (
-                  <span className='text-gray-500'>Imagem não disponível</span>
-                )}
-              </div>
-              <h2 className='font-semibold text-gray-800'>
-                {produto.nomeProduto}
-              </h2>
-              <p className='text-blue-600 font-bold mt-2'>R$ {produto.preco}</p>
-            </li>
-          </Link>
-        ))}
-      </ul>
+      {produtos.length === 0 ? (
+        <div className='text-center text-gray-500 mt-10'>
+          Nenhum produto encontrado.
+        </div>
+      ) : (
+        <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+          {produtos.map((produto) => (
+            <Link key={produto.id} to={`/produto/${produto.id}`}>
+              <li className='bg-white p-4 border rounded-lg shadow-sm hover:shadow-xl/20 transition-shadow'>
+                <div className='aspect-square bg-gray-100 mb-4 rounded-md flex items-center justify-center'>
+                  {produto.imagemProduto ? (
+                    <img
+                      src={`${baseUrl}${produto.imagemProduto}`}
+                      alt={produto.nomeProduto}
+                      className='w-full h-full object-cover'
+                    />
+                  ) : (
+                    <span className='text-gray-500'>Imagem não disponível</span>
+                  )}
+                </div>
+                <h2 className='font-semibold text-gray-800'>
+                  {produto.nomeProduto}
+                </h2>
+                <p className='text-blue-600 font-bold mt-2'>
+                  R$ {produto.preco}
+                </p>
+              </li>
+            </Link>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
