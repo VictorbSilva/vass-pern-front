@@ -1,10 +1,10 @@
 function Sobre() {
   return (
     <>
-      <div className='HistoryContainer flex flex-col md:flex-row items-center justify-between p-8 md:p-16 bg-gradient-to-br from-blue-800 to-cyan-500 rounded-lg text-white'>
+      <div className='HistoryContainer flex flex-col md:flex-row items-center justify-between w-full min-h-[45vh] bg-gradient-to-br from-blue-800 to-cyan-500 px-8 md:px-16 py-12 rounded-[35px] shadow-xl'>
         <div className='flex flex-col md:w-1/2 text-center md:text-left'>
-          <h1 className='text-5xl md:text-7xl font-black text-yellow-400 mb-6 drop-shadow-md leading-tight'>
-            Nossa História
+          <h1 className='text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-md leading-tight'>
+            Nossa <span className='text-yellow-400'>História</span>
           </h1>
           <p className='text-xl md:text-2xl font-bold text-white mb-6 drop-shadow-md leading-tight'>
             Vassouras Pernambucanas é uma empresa especializada na fabricação de

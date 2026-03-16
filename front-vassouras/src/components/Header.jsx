@@ -24,7 +24,7 @@ function Header() {
             </Link>
           </li>
           <li>
-            <Link to='/contato' className='hover:text-blue-300'>
+            <Link to='/contatos/' className='hover:text-blue-300'>
               Contato
             </Link>
           </li>

@@ -59,55 +59,66 @@ function Catalogo() {
   }, [idCategoria, baseUrl]);
 
   return (
-    <div className='CatalogoContainer p-4 bg-gradient-to-br from-white-200 to-gray-200 '>
-      <h1 className='text-2xl font-bold text-yellow-400 mb-6'>Produtos</h1>
-
-      <ul className='flex gap-2 mb-8 overflow-x-auto pb-2 px-4 border-b rounded-lg  bg-gray-100'>
-        <button
-          onClick={() => setIdCategoria(null)}
-          className={`px-4 py-2 rounded-full border ${
-            idCategoria === null
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 text-gray-700'
-          } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
-        >
-          Todos
-        </button>
-
-        {categorias.map((categoria) => (
+    <>
+      <div className='CatalagoHero flex flex-col md:flex-row items-center justify-between w-full min-h-[25vh] bg-gradient-to-br from-blue-800 to-cyan-500 px-8 md:px-16 py-12 rounded-[35px] shadow-xl '>
+        <div className='text-center md:text-left'>
+          <h2 className='text-2xl md:text-5xl font-black text-white mb-6 drop-shadow-md leading-tight'>
+            Nossos <span className='text-yellow-400'>Produtos</span>
+          </h2>
+        </div>
+      </div>
+      <div className='CatalogoContainer p-4 grid grid-cols-1 lg:grid-cols-4 gap-8'>
+        <ul className='col-span-1 flex flex-col mb-8 overflow-x-auto pb-2 px-4   '>
           <button
-            key={categoria.id}
-            onClick={() => setIdCategoria(categoria.id)}
+            onClick={() => setIdCategoria(null)}
             className={`px-4 py-2 rounded-full border ${
-              idCategoria === categoria.id
+              idCategoria === null
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 text-gray-700'
             } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
           >
-            {categoria.nome}
+            Todos
           </button>
-        ))}
-      </ul>
 
-      {isLoading && (
-        <div className='text-center text-blue-500 my-10 font-bold'>
-          Carregando produtos...
-        </div>
-      )}
-      {error && <div className='text-center text-red-500 my-10'>{error}</div>}
-
-      {produtos.length === 0 ? (
-        <div className='text-center text-gray-500 mt-10'>
-          Nenhum produto encontrado.
-        </div>
-      ) : (
-        <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-          {produtos.map((produto) => (
-            <ProdutoCard key={produto.id} produto={produto} baseUrl={baseUrl} />
+          {categorias.map((categoria) => (
+            <button
+              key={categoria.id}
+              onClick={() => setIdCategoria(categoria.id)}
+              className={`px-4 py-2 rounded-full border ${
+                idCategoria === categoria.id
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700'
+              } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
+            >
+              {categoria.nome}
+            </button>
           ))}
         </ul>
-      )}
-    </div>
+
+        {isLoading && (
+          <div className='text-center text-blue-500 my-10 font-bold'>
+            Carregando produtos...
+          </div>
+        )}
+        {error && <div className='text-center text-red-500 my-10'>{error}</div>}
+
+        {produtos.length === 0 ? (
+          <div className='text-center text-gray-500 mt-10'>
+            Nenhum produto encontrado.
+          </div>
+        ) : (
+          <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:col-span-3 gap-6'>
+            {produtos.map((produto) => (
+              <ProdutoCard
+                key={produto.id}
+                produto={produto}
+                baseUrl={baseUrl}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 

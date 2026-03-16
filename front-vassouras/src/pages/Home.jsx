@@ -26,7 +26,7 @@ function Home() {
         </Link>
 
         <Link
-          to='/contato'
+          to='/contatos/'
           className='flex-1 bg-white/20 backdrop-blur-sm border border-white/50 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-white/30 transition-transform hover:scale-105'
         >
           Fale Conosco
