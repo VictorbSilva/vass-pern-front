@@ -1,38 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ProdutoCard from '../components/ProdutoCard.jsx';
 
 function Catalogo() {
   const [produtos, setProdutos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [idCategoria, setIdCategoria] = useState(null);
 
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchProdutos() {
-      try {
-        let url = `${baseUrl}/`;
-
-        if (idCategoria) {
-          url += `?categoriaId=${idCategoria}`;
-        }
-
-        console.log('Buscando produtos com URL:', url);
-
-        const response = await fetch(url);
-        const data = await response.json();
-        setProdutos(data);
-      } catch (error) {
-        console.error('Erro ao processar produtos:', error);
-      }
-    }
-    fetchProdutos();
-  }, [idCategoria, baseUrl]);
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await fetch(`${baseUrl}/categoria/`);
+        const response = await fetch(`${baseUrl}/categorias/`);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setCategorias(data);
       } catch (error) {
@@ -41,6 +26,37 @@ function Catalogo() {
     }
     fetchCategorias();
   }, [baseUrl]);
+
+  useEffect(() => {
+    async function fetchProdutos() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        let url = `${baseUrl}/produtos/`;
+
+        if (idCategoria) {
+          url += `?categoria=${idCategoria}`;
+        }
+
+        const response = await fetch(url);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+
+        console.log('Buscando produtos com URL:', url);
+
+        const data = await response.json();
+        setProdutos(data);
+      } catch (err) {
+        setError(
+          'Erro ao carregar produtos. Por favor, tente novamente mais tarde.'
+        );
+        console.error('Erro ao processar produtos:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProdutos();
+  }, [idCategoria, baseUrl]);
 
   return (
     <div className='CatalogoContainer p-4 bg-gradient-to-br from-white-200 to-gray-200 '>
@@ -68,10 +84,17 @@ function Catalogo() {
                 : 'bg-gray-200 text-gray-700'
             } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
           >
-            {categoria.nomeCategoria}
+            {categoria.nome}
           </button>
         ))}
       </ul>
+
+      {isLoading && (
+        <div className='text-center text-blue-500 my-10 font-bold'>
+          Carregando produtos...
+        </div>
+      )}
+      {error && <div className='text-center text-red-500 my-10'>{error}</div>}
 
       {produtos.length === 0 ? (
         <div className='text-center text-gray-500 mt-10'>
@@ -80,27 +103,7 @@ function Catalogo() {
       ) : (
         <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
           {produtos.map((produto) => (
-            <Link key={produto.id} to={`/produto/${produto.id}`}>
-              <li className='bg-white p-4 border rounded-lg shadow-sm hover:shadow-xl/20 transition-shadow'>
-                <div className='aspect-square bg-gray-100 mb-4 rounded-md flex items-center justify-center'>
-                  {produto.imagemProduto ? (
-                    <img
-                      src={`${baseUrl}${produto.imagemProduto}`}
-                      alt={produto.nomeProduto}
-                      className='w-full h-full object-cover'
-                    />
-                  ) : (
-                    <span className='text-gray-500'>Imagem não disponível</span>
-                  )}
-                </div>
-                <h2 className='font-semibold text-gray-800'>
-                  {produto.nomeProduto}
-                </h2>
-                <p className='text-blue-600 font-bold mt-2'>
-                  R$ {produto.preco}
-                </p>
-              </li>
-            </Link>
+            <ProdutoCard key={produto.id} produto={produto} baseUrl={baseUrl} />
           ))}
         </ul>
       )}

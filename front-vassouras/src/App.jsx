@@ -1,11 +1,11 @@
 import './App.css';
-import ProdutoDetalhe from './components/ProdutoDetalhe.jsx';
+import Home from './pages/Home.jsx';
+import Catalogo from './pages/Catalogo.jsx';
+import ProdutoDetalhe from './pages/ProdutoDetalhe.jsx';
+import Sobre from './pages/Sobre.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Catalogo from './components/Catalogo.jsx';
-import Home from './components/Home.jsx';
-import Sobre from './components/Sobre.jsx';
 
 function App() {
   return (

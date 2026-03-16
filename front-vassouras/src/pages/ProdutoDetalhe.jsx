@@ -1,16 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import BotaoWhatsapp from '../components/BotaoWhatsapp';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
   const [produto, setProduto] = useState(null);
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/';
 
   useEffect(() => {
     async function fetchProduto() {
       try {
-        const response = await fetch(`${baseUrl}/produto/${id}`);
+        const response = await fetch(`${baseUrl}/api/produtos/${id}/`);
         const data = await response.json();
         setProduto(data);
       } catch (error) {
@@ -41,8 +42,8 @@ function ProdutoDetalhe() {
       <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-start'>
         <div className='w-full'>
           <img
-            src={`${baseUrl}${produto.imagemProduto}`}
-            alt={produto.nomeProduto}
+            src={`${produto.imagem}`}
+            alt={produto.nome}
             className='w-full h-auto rounded-xl shadow-lg object-cover'
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/400?text=Sem+Imagem';
@@ -51,22 +52,21 @@ function ProdutoDetalhe() {
         </div>
 
         <div className='flex flex-col gap-4'>
-          <h1 className='text-3xl font-bold text-gray-900'>
-            {produto.nomeProduto}
-          </h1>
+          <h1 className='text-3xl font-bold text-gray-900'>{produto.nome}</h1>
 
           <div className='border-t border-b py-4 my-2'>
             <h3 className='text-sm uppercase tracking-wider text-gray-700 font-bold mb-2'>
               Descrição
             </h3>
             <p className='text-gray-600 leading-relaxed'>
-              {produto.descricaoProduto ||
+              {produto.descricao ||
                 'Este produto não possui descrição disponível.'}
             </p>
           </div>
           <p className='mt-4 text-3xl font-semibold text-blue-600'>
             {formatarPreco(produto.preco)}
           </p>
+          <BotaoWhatsapp produto={produto} />
         </div>
       </div>
     </div>
