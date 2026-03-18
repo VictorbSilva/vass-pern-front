@@ -8,7 +8,8 @@ function Sobre() {
           </h1>
           <p className='text-xl md:text-2xl font-bold text-white mb-6 drop-shadow-md leading-tight'>
             Vassouras Pernambucanas é uma empresa especializada na fabricação de
-            vassouras de alta qualidade. <br className='hidden md:block' />
+            vassouras de alta qualidade.{' '}
+            {/*<br className='hidden md:block' /> */}
             Com mais de 20 anos de experiência no mercado, nos dedicamos a
             oferecer produtos duráveis e eficientes para atender às necessidades
             dos nossos clientes.
