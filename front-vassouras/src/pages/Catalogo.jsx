@@ -82,20 +82,22 @@ function Catalogo() {
         </div>
       </div>
       <div className='CatalogoContainer p-4 grid grid-cols-1 lg:grid-cols-4 gap-8'>
-        <ul className='col-span-1 flex flex-col mb-8 overflow-x-auto pb-2 px-4   '>
-          <input
-            type='text'
-            placeholder='Buscar produtos...'
-            value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
-            className='bg-white text-gray-700 placeholder:text-gray-500 border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          />
+        <aside className='col-span-1 flex flex-col mb-8 overflow-x-auto pb-2 px-4   '>
+          <div className='InputContainer pb-6 border-b border-gray-200'>
+            <input
+              type='text'
+              placeholder='Buscar produtos...'
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+              className='mt-1 w-full bg-white text-gray-700 placeholder:text-gray-500 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors'
+            />
+          </div>
           <button
             onClick={() => setIdCategoria(null)}
-            className={`px-4 py-2 rounded-full border ${
+            className={`w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors ${
               idCategoria === null
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700'
+                ? 'w-full text-left px-4 py-3 rounded-lg font-bold bg-blue-50 text-blue-700 border-l-4 border-blue-600'
+                : 'w-full text-left px-4 py-3 rounded-lg font-bold border-l-4 bg-gray-200 text-gray-700'
             } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
           >
             Todos
@@ -105,16 +107,16 @@ function Catalogo() {
             <button
               key={categoria.id}
               onClick={() => setIdCategoria(categoria.id)}
-              className={`px-4 py-2 rounded-full border ${
+              className={`w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors ${
                 idCategoria === categoria.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700'
+                  ? 'w-full text-left px-4 py-3 rounded-lg font-bold bg-blue-50 text-blue-700 border-l-4 border-blue-600'
+                  : 'w-full text-left px-4 py-3 rounded-lg font-bold border-l-4 bg-gray-200 text-gray-700'
               } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
             >
               {categoria.nome}
             </button>
           ))}
-        </ul>
+        </aside>
 
         {isLoading && (
           <div className='text-center text-blue-500 my-10 font-bold'>
