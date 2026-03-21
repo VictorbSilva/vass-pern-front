@@ -74,12 +74,13 @@ function Catalogo() {
 
   return (
     <>
-      <div className='CatalogoHero flex flex-col md:flex-row items-center justify-between w-full min-h-[25vh] bg-gradient-to-br from-blue-800 to-cyan-500 px-8 md:px-16 py-12 rounded-[35px] shadow-xl '>
-        <div className='text-center md:text-left'>
-          <h2 className='text-2xl md:text-5xl font-black text-white mb-6 drop-shadow-md leading-tight'>
-            Nossos <span className='text-yellow-400'>Produtos</span>
-          </h2>
-        </div>
+      <div className='col-span-1 lg:col-span-4 bg-gradient-to-br from-blue-800 to-cyan-500 mb-4 pb-4 text-center'>
+        <h1 className='text-5xl md:text-4xl font-black text-white drop-shadow-md'>
+          Catálogo de <span className='text-yellow-400'>Produtos</span>
+        </h1>
+        <p className='text-lg md:text-xl text-white/90 mt-2 max-w-1xl mx-auto leading-relaxed'>
+          Encontre as melhores opções para o seu negócio.
+        </p>
       </div>
       <div className='CatalogoContainer p-4 grid grid-cols-1 lg:grid-cols-4 gap-8'>
         <aside className='col-span-1 flex flex-col mb-8 overflow-x-auto pb-2 px-4   '>
@@ -94,24 +95,23 @@ function Catalogo() {
           </div>
           <button
             onClick={() => setIdCategoria(null)}
-            className={`w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg transition-colors border-l-4 cursor-pointer ${
               idCategoria === null
-                ? 'w-full text-left px-4 py-3 rounded-lg font-bold bg-blue-50 text-blue-700 border-l-4 border-blue-600'
-                : 'w-full text-left px-4 py-3 rounded-lg font-bold border-l-4 bg-gray-200 text-gray-700'
-            } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
+                ? 'bg-blue-50 text-blue-700 border-blue-600 font-bold'
+                : 'border-transparent text-gray-600 hover:bg-gray-100'
+            }`}
           >
             Todos
           </button>
 
           {categorias.map((categoria) => (
             <button
-              key={categoria.id}
               onClick={() => setIdCategoria(categoria.id)}
-              className={`w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors ${
+              className={`w-full text-left px-4 py-3 rounded-lg transition-colors border-l-4 cursor-pointer ${
                 idCategoria === categoria.id
-                  ? 'w-full text-left px-4 py-3 rounded-lg font-bold bg-blue-50 text-blue-700 border-l-4 border-blue-600'
-                  : 'w-full text-left px-4 py-3 rounded-lg font-bold border-l-4 bg-gray-200 text-gray-700'
-              } cursor-pointer hover:bg-blue-400 transition-colors shrink-0`}
+                  ? 'bg-blue-50 text-blue-700 border-blue-600 font-bold'
+                  : 'border-transparent text-gray-600 hover:bg-gray-100'
+              }`}
             >
               {categoria.nome}
             </button>

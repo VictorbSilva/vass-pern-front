@@ -1,32 +1,57 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 function Header() {
+  const getNavClasses = (isActive) => {
+    const baseClasses =
+      "relative pb-1 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:transition-all after:duration-300";
+
+    const activeClasses =
+      'text-yellow-400 font-bold after:w-full after:bg-yellow-400';
+
+    const inactiveClasses =
+      'text-gray-600 hover:text-blue-500 transition-colors after:w-0 hover:after:w-full after:bg-blue-500';
+
+    return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+  };
+
   return (
-    <header className='bg-linear-to-r from-gray-300 to-white-300'>
-      <div className='container mx-auto'>
+    <header className='bg-white-300'>
+      <div className='container mx-auto flex items-center justify-between px-6 py-4'>
         <Link to='/'>
           <h1 className='text-2xl font-bold'>Logo</h1>
         </Link>
         <ul className='flex space-x-4'>
           <li>
-            <Link to='/' className='hover:text-blue-300'>
+            <NavLink
+              to='/'
+              className={({ isActive }) => getNavClasses(isActive)}
+            >
               Início
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to='/produtos' className='hover:text-blue-300'>
+            <NavLink
+              to='/produtos'
+              className={({ isActive }) => getNavClasses(isActive)}
+            >
               Produtos
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to='/sobre' className='hover:text-blue-300'>
+            <NavLink
+              to='/sobre'
+              className={({ isActive }) => getNavClasses(isActive)}
+            >
               Sobre
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to='/contatos/' className='hover:text-blue-300'>
-              Contato
-            </Link>
+            <NavLink
+              to='/contatos/'
+              className={({ isActive }) => getNavClasses(isActive)}
+            >
+              Contatos
+            </NavLink>
           </li>
         </ul>
       </div>
