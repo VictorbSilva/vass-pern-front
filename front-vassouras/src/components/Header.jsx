@@ -15,12 +15,12 @@ function Header() {
   };
 
   return (
-    <header className='bg-white-300'>
+    <header className='bg-white shadow-sm sticky top-0 z-50'>
       <div className='container mx-auto flex items-center justify-between px-6 py-4'>
         <Link to='/'>
           <h1 className='text-2xl font-bold'>Logo</h1>
         </Link>
-        <ul className='flex space-x-4'>
+        <ul className='hidden md:flex space-x-8'>
           <li>
             <NavLink
               to='/'
