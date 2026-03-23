@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone } from 'lucide-react';
 
 function Footer() {
-  const apiUrl = import.meta.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
   const adminUrl = apiUrl.replace('/api', '') + '/admin';
 
   return (
