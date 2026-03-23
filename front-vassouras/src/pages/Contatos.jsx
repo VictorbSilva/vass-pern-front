@@ -30,9 +30,9 @@ function Contatos() {
                 Endereço
               </h3>
               <p className='text-gray-800 font-medium'>
-                Av. Industrial, 1234 — Distrito Industrial,
+                Rua São Miguel, 1234 - Afogados
                 <br />
-                Recife - PE
+                Recife - PE, 50850-000
               </p>
             </div>
           </div>

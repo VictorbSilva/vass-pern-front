@@ -126,17 +126,13 @@ function Catalogo() {
         {error && <div className='text-center text-red-500 my-10'>{error}</div>}
 
         {produtos.length === 0 ? (
-          <div className='text-center text-gray-500 mt-10'>
+          <div className='text-center text-gray-500 mt-10 font-bold'>
             Nenhum produto encontrado.
           </div>
         ) : (
-          <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:col-span-3 gap-6'>
+          <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:col-span-3 gap-3 sm:gap-6'>
             {produtos.map((produto) => (
-              <ProdutoCard
-                key={produto.id}
-                produto={produto}
-                baseUrl={baseUrl}
-              />
+              <ProdutoCard key={produto.id} produto={produto} />
             ))}
           </ul>
         )}
