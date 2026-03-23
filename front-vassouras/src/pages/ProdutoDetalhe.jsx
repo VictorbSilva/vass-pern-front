@@ -11,7 +11,7 @@ function ProdutoDetalhe() {
   useEffect(() => {
     async function fetchProduto() {
       try {
-        const response = await fetch(`${baseUrl}/api/produtos/${id}/`);
+        const response = await fetch(`${baseUrl}/produtos/${id}/`);
         const data = await response.json();
         setProduto(data);
       } catch (error) {
