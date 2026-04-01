@@ -24,18 +24,18 @@ This is the frontend repository for the Vassouras Pernambucanas platform, featur
 
 ## Tech Stack
 
-| Category | Technology | Version |
-|----------|-----------|---------|
-| Runtime | Node.js | ^18 (recommended) |
-| Package Manager | npm | Latest |
-| Frontend Framework | React | 19.2.0 |
-| Build Tool | Vite | 7.3.1 |
-| Router | React Router DOM | 7.13.1 |
-| CSS Framework | Tailwind CSS | 4.2.1 |
-| Linter | ESLint | 9.39.1 |
-| Testing | Vitest | 4.1.0 |
-| Icon Library | lucide-react | 0.577.0 |
-| Deployment | Vercel | — |
+| Category           | Technology       | Version           |
+| ------------------ | ---------------- | ----------------- |
+| Runtime            | Node.js          | ^18 (recommended) |
+| Package Manager    | npm              | Latest            |
+| Frontend Framework | React            | 19.2.0            |
+| Build Tool         | Vite             | 7.3.1             |
+| Router             | React Router DOM | 7.13.1            |
+| CSS Framework      | Tailwind CSS     | 4.2.1             |
+| Linter             | ESLint           | 9.39.1            |
+| Testing            | Vitest           | 4.1.0             |
+| Icon Library       | lucide-react     | 0.577.0           |
+| Deployment         | Vercel           | —                 |
 
 ### Key Dependencies
 
@@ -108,13 +108,13 @@ npm run preview
 
 ## Available Scripts
 
-| Script | Command | Description |
-|--------|---------|-------------|
-| `dev` | `vite` | Start development server with HMR |
-| `build` | `vite build` | Build for production to `dist/` |
+| Script    | Command        | Description                                |
+| --------- | -------------- | ------------------------------------------ |
+| `dev`     | `vite`         | Start development server with HMR          |
+| `build`   | `vite build`   | Build for production to `dist/`            |
 | `preview` | `vite preview` | Serve production build locally for testing |
-| `lint` | `eslint .` | Run ESLint to check code quality |
-| `test` | `vitest` | Run unit tests with Vitest |
+| `lint`    | `eslint .`     | Run ESLint to check code quality           |
+| `test`    | `vitest`       | Run unit tests with Vitest                 |
 
 **Examples:**
 
@@ -151,6 +151,7 @@ npm run test
 ```
 
 **Test Files:**
+
 - Tests are colocated with components or in dedicated `.test.js(x)` files
 - Example: [front-vassouras/src/utils/GeraLinkWhatsapp.test.jsx](front-vassouras/src/utils/GeraLinkWhatsapp.test.jsx)
 
@@ -216,6 +217,7 @@ This project is configured for deployment on Vercel. The `vercel.json` file conf
 3. Vercel automatically detects Vite and builds/deploys on push
 
 **Build Settings (auto-detected):**
+
 - **Build Command:** `npm run build`
 - **Output Directory:** `dist`
 

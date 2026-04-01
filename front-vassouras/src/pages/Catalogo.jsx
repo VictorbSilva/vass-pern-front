@@ -106,6 +106,7 @@ function Catalogo() {
 
           {categorias.map((categoria) => (
             <button
+              key={categoria.id}
               onClick={() => setIdCategoria(categoria.id)}
               className={`w-full text-left px-4 py-3 rounded-lg transition-colors border-l-4 cursor-pointer ${
                 idCategoria === categoria.id
@@ -118,24 +119,31 @@ function Catalogo() {
           ))}
         </aside>
 
-        {isLoading && (
-          <div className='text-center text-blue-500 my-10 font-bold'>
-            Carregando produtos...
-          </div>
-        )}
-        {error && <div className='text-center text-red-500 my-10'>{error}</div>}
+        <main className='col-span-1 lg:col-span-3'>
+          {isLoading && (
+            <div className='text-center text-blue-500 my-10 font-bold'>
+              Carregando produtos...
+            </div>
+          )}
 
-        {produtos.length === 0 ? (
-          <div className='text-center text-gray-500 mt-10 font-bold'>
-            Nenhum produto encontrado.
-          </div>
-        ) : (
-          <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:col-span-3 gap-3 sm:gap-6'>
-            {produtos.map((produto) => (
-              <ProdutoCard key={produto.id} produto={produto} />
-            ))}
-          </ul>
-        )}
+          {!isLoading && error && (
+            <div className='text-center text-red-500 my-10'>{error}</div>
+          )}
+
+          {!isLoading && !error && produtos.length === 0 && (
+            <div className='text-center text-gray-500 mt-10 font-bold'>
+              Nenhum produto encontrado.
+            </div>
+          )}
+
+          {!isLoading && !error && produtos.length > 0 && (
+            <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
+              {produtos.map((produto) => (
+                <ProdutoCard key={produto.id} produto={produto} />
+              ))}
+            </ul>
+          )}
+        </main>
       </div>
     </>
   );
