@@ -15,7 +15,7 @@ function Catalogo() {
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await fetch(`${baseUrl}/categorias/`);
+        const response = await fetch(`${baseUrl}/api/categorias/`);
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -35,7 +35,7 @@ function Catalogo() {
       setIsLoading(true);
       setError(null);
       try {
-        const url = new URL(`${baseUrl}/produtos/`);
+        const url = new URL(`${baseUrl}/api/produtos/`);
         if (idCategoria) url.searchParams.append('categoria', idCategoria);
         if (termoBusca) url.searchParams.append('search', termoBusca);
 
