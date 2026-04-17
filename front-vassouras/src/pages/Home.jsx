@@ -4,24 +4,48 @@ import { useState, useEffect } from 'react';
 
 function Home() {
   const [produtos, setProdutos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchProdutos() {
+      setIsLoading(true);
+      setError(null);
       try {
-        const response = await fetch(`${baseUrl}/api/produtos/`);
+        const response = await fetch(`${baseUrl}/api/produtos/`, { signal });
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         const produtosSelecionados = [...data]
           .sort(() => 0.5 - Math.random())
           .slice(0, 10);
-        setProdutos(produtosSelecionados);
+        if (!signal.aborted) {
+          setProdutos(produtosSelecionados);
+          setIsLoading(false);
+        }
       } catch (error) {
-        console.error('Erro ao processar produtos:', error);
+        if (error.name === 'AbortError') {
+          console.log('Requisição abortada');
+          return;
+        }
+        if (!signal.aborted) {
+          setError('Erro ao carregar produtos.');
+          setIsLoading(false);
+          console.error('Erro ao processar produtos:', error);
+        }
       }
     }
-    fetchProdutos();
+    const timerId = setTimeout(() => {
+      fetchProdutos();
+    }, 700);
+    return () => {
+      clearTimeout(timerId);
+      controller.abort();
+    };
   }, [baseUrl]);
 
   return (
@@ -57,7 +81,17 @@ function Home() {
           </Link>
         </div>
       </div>
-      <ProdutosRow titulo='Produtos em Destaque' produtos={produtos} />
+      <section>
+        {isLoading && (
+          <div className='flex justify-center items-center py-10'>
+            <div className='loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16'></div>
+          </div>
+        )}
+        {error && <div className='text-red-500 text-center py-10'>{error}</div>}
+        {!isLoading && !error && produtos.length > 0 && (
+          <ProdutosRow titulo='Produtos em Destaque' produtos={produtos} />
+        )}
+      </section>
     </>
   );
 }
