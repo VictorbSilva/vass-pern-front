@@ -9,13 +9,14 @@ const ProdutosRow = ({ titulo, produtos }) => {
 
         <Link
           to='/produtos'
-          className='bg-yellow-400 text-blue-900 font-bold text-sm py-2 px-5 rounded-xl shadow hover:bg-yellow-300 transition-transform hover:scale-105'
+          className='bg-yellow-400 text-blue-900 font-bold text-sm py-2 px-5 rounded-xl shadow hover:bg-yellow-300 transition-transform hover:scale-105 select-none'
+          draggable='false'
         >
           Ver todos →
         </Link>
       </div>
 
-      <ul className='flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 px-6'>
+      <ul className='flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 px-6 touch-pan-x'>
         {produtos.map((produto) => (
           <li key={produto.id} className='shrink-0 w-[260px] snap-center'>
             <ProdutoCard produto={produto} />
