@@ -39,11 +39,8 @@ function Home() {
         }
       }
     }
-    const timerId = setTimeout(() => {
-      fetchProdutos();
-    }, 700);
+    fetchProdutos();
     return () => {
-      clearTimeout(timerId);
       controller.abort();
     };
   }, [baseUrl]);

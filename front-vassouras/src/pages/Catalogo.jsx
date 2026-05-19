@@ -10,7 +10,7 @@ function Catalogo() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
   useEffect(() => {
     async function fetchCategorias() {

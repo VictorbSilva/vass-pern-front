@@ -2,28 +2,75 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BotaoWhatsapp from '../components/BotaoWhatsapp';
+import ProdutosRow from '../components/ProdutosRow.jsx';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
   const [produto, setProduto] = useState(null);
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/';
+  const [relacionados, setRelacionados] = useState([]);
+  const [loadingRelacionados, setLoadingRelacionados] = useState(false);
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    setProduto(null);
+    window.scrollTo(0, 0);
+
     async function fetchProduto() {
       try {
-        const response = await fetch(`${baseUrl}/produtos/${id}/`);
+        const response = await fetch(`${baseUrl}/api/produtos/${id}/`, {
+          signal: controller.signal,
+        });
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setProduto(data);
       } catch (error) {
-        console.error('Erro ao buscar detalhes do produto:', error);
+        if (error.name !== 'AbortError') {
+          console.error('Erro ao buscar detalhes do produto:', error);
+        }
       }
     }
+
     fetchProduto();
+
+    return () => controller.abort();
   }, [id, baseUrl]);
 
-  if (!produto) {
-    return <div className='p-10 text-center'>Carregando detalhes...</div>;
-  }
+  useEffect(() => {
+    if (!produto?.categoria) return;
+
+    const controller = new AbortController();
+
+    async function fetchRelacionados() {
+      setLoadingRelacionados(true);
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/produtos/?categoria=${produto.categoria}`,
+          { signal: controller.signal }
+        );
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        const vitrineFiltrada = data
+          .filter((item) => item.id !== produto.id)
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 8);
+        setRelacionados(vitrineFiltrada);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Erro ao buscar produtos relacionados:', error);
+        }
+      } finally {
+        setLoadingRelacionados(false);
+      }
+    }
+
+    fetchRelacionados();
+
+    return () => controller.abort();
+  }, [produto?.categoria, produto?.id, baseUrl]);
 
   const formatarPreco = (valor) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -31,6 +78,10 @@ function ProdutoDetalhe() {
       currency: 'BRL',
     }).format(valor);
   };
+
+  if (!produto) {
+    return <div className='p-10 text-center'>Carregando detalhes...</div>;
+  }
 
   return (
     <div className='ProdutoContainer bg-gray-100 rounded-lg max-w-6xl mx-auto p-6'>
@@ -46,7 +97,7 @@ function ProdutoDetalhe() {
             alt={produto.nome}
             className='w-full h-auto rounded-xl shadow-lg object-cover'
             onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/400?text=Sem+Imagem';
+              e.target.src = 'https://placehold.co/400x400/png?text=Sem+Imagem';
             }}
           />
         </div>
@@ -69,6 +120,14 @@ function ProdutoDetalhe() {
           <BotaoWhatsapp produto={produto} />
         </div>
       </div>
+
+      {(loadingRelacionados || relacionados.length > 0) && (
+        <ProdutosRow
+          titulo='Veja também'
+          produtos={relacionados}
+          loading={loadingRelacionados}
+        />
+      )}
     </div>
   );
 }
