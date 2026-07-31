@@ -1,11 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone } from 'lucide-react';
-import { API_BASE_URL } from '../services/api.js';
 
 function Footer() {
-  // O admin do Django fica na raiz do backend, fora do /api/.
-  const adminUrl = `${API_BASE_URL}/admin`;
-
   return (
     <footer className='bg-gray-100 text-white py-6 mt-5 justify-center items-center w-full border-t shadow-lg'>
       <div className='container grid grid-cols-1 md:grid-cols-3 gap-4 mx-auto text-center'>
