@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import ProdutosRow from '../components/ProdutosRow';
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../services/api.js';
 
 function Home() {
   const [produtos, setProdutos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
   useEffect(() => {
     const controller = new AbortController();
@@ -16,7 +16,9 @@ function Home() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${baseUrl}/api/produtos/`, { signal });
+        const response = await fetch(`${API_BASE_URL}/api/produtos/`, {
+          signal,
+        });
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -43,7 +45,7 @@ function Home() {
     return () => {
       controller.abort();
     };
-  }, [baseUrl]);
+  }, []);
 
   return (
     <>

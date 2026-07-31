@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BotaoWhatsapp from '../components/BotaoWhatsapp';
 import ProdutosRow from '../components/ProdutosRow.jsx';
+import { API_BASE_URL } from '../services/api.js';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
   const [produto, setProduto] = useState(null);
   const [relacionados, setRelacionados] = useState([]);
   const [loadingRelacionados, setLoadingRelacionados] = useState(false);
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
   useEffect(() => {
     const controller = new AbortController();
@@ -19,7 +19,7 @@ function ProdutoDetalhe() {
 
     async function fetchProduto() {
       try {
-        const response = await fetch(`${baseUrl}/api/produtos/${id}/`, {
+        const response = await fetch(`${API_BASE_URL}/api/produtos/${id}/`, {
           signal: controller.signal,
         });
         if (!response.ok)
@@ -36,7 +36,7 @@ function ProdutoDetalhe() {
     fetchProduto();
 
     return () => controller.abort();
-  }, [id, baseUrl]);
+  }, [id]);
 
   useEffect(() => {
     if (!produto?.categoria) return;
@@ -47,7 +47,7 @@ function ProdutoDetalhe() {
       setLoadingRelacionados(true);
       try {
         const response = await fetch(
-          `${baseUrl}/api/produtos/?categoria=${produto.categoria}`,
+          `${API_BASE_URL}/api/produtos/?categoria=${produto.categoria}`,
           { signal: controller.signal }
         );
         if (!response.ok)
@@ -70,7 +70,7 @@ function ProdutoDetalhe() {
     fetchRelacionados();
 
     return () => controller.abort();
-  }, [produto?.categoria, produto?.id, baseUrl]);
+  }, [produto?.categoria, produto?.id]);
 
   const formatarPreco = (valor) => {
     return new Intl.NumberFormat('pt-BR', {

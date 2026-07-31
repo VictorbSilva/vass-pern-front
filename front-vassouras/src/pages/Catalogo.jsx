@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ProdutoCard from '../components/ProdutoCard.jsx';
+import { API_BASE_URL } from '../services/api.js';
 
 function Catalogo() {
   const [produtos, setProdutos] = useState([]);
@@ -10,12 +11,10 @@ function Catalogo() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await fetch(`${baseUrl}/api/categorias/`);
+        const response = await fetch(`${API_BASE_URL}/api/categorias/`);
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -25,7 +24,7 @@ function Catalogo() {
       }
     }
     fetchCategorias();
-  }, [baseUrl]);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,7 +34,7 @@ function Catalogo() {
       setIsLoading(true);
       setError(null);
       try {
-        const url = new URL(`${baseUrl}/api/produtos/`);
+        const url = new URL(`${API_BASE_URL}/api/produtos/`);
         if (idCategoria) url.searchParams.append('categoria', idCategoria);
         if (termoBusca) url.searchParams.append('search', termoBusca);
 
@@ -70,7 +69,7 @@ function Catalogo() {
       clearTimeout(timerId);
       controller.abort();
     };
-  }, [idCategoria, baseUrl, termoBusca]);
+  }, [idCategoria, termoBusca]);
 
   return (
     <>
