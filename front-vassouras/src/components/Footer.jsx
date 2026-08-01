@@ -48,16 +48,6 @@ function Footer() {
                 Contatos
               </Link>
             </li>
-            <li>
-              <Link
-                to={adminUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='hover:text-yellow-400 transition-colors opacity-50 hover:opacity-100'
-              >
-                Acesso Restrito
-              </Link>
-            </li>
           </ul>
         </nav>
         <address className='flex flex-col gap-4 not-italic'>
