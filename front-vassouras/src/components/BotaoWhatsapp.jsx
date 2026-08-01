@@ -1,10 +1,12 @@
 import gerarLinkWhatsapp from '../utils/GeraLinkWhatsapp';
 import { MessageCircle, ArrowRight } from 'lucide-react';
+import { registrarConversaoWhatsapp } from '../services/ads';
 
 const BotaoWhatsapp = ({ produto }) => {
   return (
     <a
       href={gerarLinkWhatsapp(produto)}
+      onClick={registrarConversaoWhatsapp}
       target='_blank'
       rel='noopener noreferrer'
       className='group w-full flex items-center justify-center lg:justify-between p-6 bg-[#25D366] hover:bg-[#1ebd5b] text-white rounded-2xl transition-all shadow-md hover:shadow-lg'

@@ -8,6 +8,8 @@ import { API_BASE_URL } from '../services/api.js';
 function ProdutoDetalhe() {
   const { id } = useParams();
   const [produto, setProduto] = useState(null);
+  const [erro, setErro] = useState(null);
+  const [tentativa, setTentativa] = useState(0);
   const [relacionados, setRelacionados] = useState([]);
   const [loadingRelacionados, setLoadingRelacionados] = useState(false);
 
@@ -15,6 +17,7 @@ function ProdutoDetalhe() {
     const controller = new AbortController();
 
     setProduto(null);
+    setErro(null);
     window.scrollTo(0, 0);
 
     async function fetchProduto() {
@@ -22,6 +25,10 @@ function ProdutoDetalhe() {
         const response = await fetch(`${API_BASE_URL}/api/produtos/${id}/`, {
           signal: controller.signal,
         });
+        if (response.status === 404) {
+          setErro('nao-encontrado');
+          return;
+        }
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -29,6 +36,7 @@ function ProdutoDetalhe() {
       } catch (error) {
         if (error.name !== 'AbortError') {
           console.error('Erro ao buscar detalhes do produto:', error);
+          setErro('falha');
         }
       }
     }
@@ -36,7 +44,7 @@ function ProdutoDetalhe() {
     fetchProduto();
 
     return () => controller.abort();
-  }, [id]);
+  }, [id, tentativa]);
 
   useEffect(() => {
     if (!produto?.categoria) return;
@@ -78,6 +86,36 @@ function ProdutoDetalhe() {
       currency: 'BRL',
     }).format(valor);
   };
+
+  if (erro) {
+    const naoEncontrado = erro === 'nao-encontrado';
+
+    return (
+      <div className='p-10 text-center flex flex-col items-center gap-4'>
+        <h2 className='text-2xl font-bold text-gray-900'>
+          {naoEncontrado
+            ? 'Produto não encontrado'
+            : 'Não foi possível carregar o produto'}
+        </h2>
+        <p className='text-gray-600'>
+          {naoEncontrado
+            ? 'Este produto pode ter saído do catálogo.'
+            : 'Verifique sua conexão e tente de novo.'}
+        </p>
+        {!naoEncontrado && (
+          <button
+            onClick={() => setTentativa((numero) => numero + 1)}
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+          >
+            Tentar novamente
+          </button>
+        )}
+        <Link to='/produtos' className='text-blue-600 underline'>
+          Ver todos os produtos
+        </Link>
+      </div>
+    );
+  }
 
   if (!produto) {
     return <div className='p-10 text-center'>Carregando detalhes...</div>;
