@@ -1,104 +1,116 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import {useEffect, useRef, useState} from 'react';
+import {Link} from 'react-router-dom';
 import ProdutoCard from './ProdutoCard.jsx';
 
 function useDragScroll(enabled) {
-  const ref = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
+    const ref = useRef(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-  const stopDragging = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    useEffect(() => {
+        const elemento = ref.current;
+        if (!elemento || !enabled) return;
 
-  const onMouseDown = useCallback(
-    (e) => {
-      if (!enabled) return;
-      setIsDragging(true);
-      startX.current = e.pageX - ref.current.offsetLeft;
-      scrollLeft.current = ref.current.scrollLeft;
-      window.addEventListener('mouseup', stopDragging, { once: true });
-    },
-    [enabled, stopDragging]
-  );
+        let arrastando = false;
+        let startX = 0;
+        let scrollLeft = 0;
 
-  const onMouseMove = useCallback(
-    (e) => {
-      if (!enabled || !isDragging) return;
-      e.preventDefault();
-      const x = e.pageX - ref.current.offsetLeft;
-      const walk = (x - startX.current) * 1.5;
-      ref.current.scrollLeft = scrollLeft.current - walk;
-    },
-    [enabled, isDragging]
-  );
+        function onMouseMove(e) {
+            if (!arrastando) return;
+            e.preventDefault();
+            const x = e.pageX - elemento.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            elemento.scrollLeft = scrollLeft - walk;
+        }
 
-  return { ref, isDragging, onMouseDown, onMouseMove };
+        function stopDragging() {
+            arrastando = false;
+            setIsDragging(false);
+            window.removeEventListener('mousemove', onMouseMove);
+        }
+
+        function onMouseDown(e) {
+            arrastando = true;
+            setIsDragging(true);
+            startX = e.pageX - elemento.offsetLeft;
+            scrollLeft = elemento.scrollLeft;
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', stopDragging, {once: true});
+        }
+
+        elemento.addEventListener('mousedown', onMouseDown);
+
+        return () => {
+            elemento.removeEventListener('mousedown', onMouseDown);
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', stopDragging);
+            setIsDragging(false);
+        };
+    }, [enabled]);
+
+    return {ref, isDragging};
 }
 
 const MOBILE_BREAKPOINT = 768;
 
-const ProdutosRow = ({ titulo, produtos }) => {
-  const [isMobile, setIsMobile] = useState(
-    () => window.innerWidth < MOBILE_BREAKPOINT
-  );
+const ProdutosRow = ({titulo, produtos}) => {
+    const [isMobile, setIsMobile] = useState(
+        () => window.innerWidth < MOBILE_BREAKPOINT
+    );
 
-  useEffect(() => {
-    let timeoutId;
+    useEffect(() => {
+        let timeoutId;
 
-    function handleResize() {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-      }, 300);
-    }
+        function handleResize() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+            }, 300);
+        }
 
-    window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
 
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
-  const { ref, isDragging, onMouseDown, onMouseMove } =
-    useDragScroll(!isMobile);
+    const {ref, isDragging} = useDragScroll(!isMobile);
 
-  return (
-    <section className='py-10'>
-      <div className='px-6 flex items-center justify-between mb-4'>
-        <h2 className='text-2xl font-bold text-yellow-500'>{titulo}</h2>
+    return (
+        <section className='py-10' aria-label={titulo}>
+            <div className='px-6 flex items-center justify-between mb-4'>
+                <h2 className='text-2xl font-bold text-yellow-500'>{titulo}</h2>
 
-        <Link
-          to='/produtos'
-          className='bg-yellow-400 text-blue-900 font-bold text-sm py-2 px-5 rounded-xl shadow hover:bg-yellow-300 transition-transform hover:scale-105'
-        >
-          Ver todos →
-        </Link>
-      </div>
+                <Link
+                    to='/produtos'
+                    className='bg-yellow-400 text-blue-900 font-bold text-sm py-2 px-5 rounded-xl shadow hover:bg-yellow-300 transition-transform hover:scale-105'
+                >
+                    Ver todos →
+                </Link>
+            </div>
 
-      <ul
-        ref={ref}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        className={`
-          flex overflow-x-auto gap-4 pb-4 px-6
+            <div
+                ref={ref}
+                className={`
+          overflow-x-auto pb-4 px-6
           snap-x snap-proximity scroll-smooth
           touch-pan-x select-none
           [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
           ${!isMobile && !isDragging ? 'cursor-grab' : ''}
           ${!isMobile && isDragging ? 'cursor-grabbing' : ''}
         `}
-      >
-        {produtos.map((produto) => (
-          <li key={produto.id} className='shrink-0 w-[260px] snap-center'>
-            <ProdutoCard produto={produto} />
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+            >
+                <ul className='flex gap-4'>
+                    {produtos.map((produto) => (
+                        <li key={produto.id} className='shrink-0 w-65 snap-center'>
+                            <ProdutoCard produto={produto}/>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
+    );
 };
 
 export default ProdutosRow;
