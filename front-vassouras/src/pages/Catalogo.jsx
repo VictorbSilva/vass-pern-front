@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ProdutoCard from '../components/ProdutoCard.jsx';
-import { API_BASE_URL } from '../services/api.js';
+import { API_BASE_URL, buscarJson } from '../services/api.js';
 
 function Catalogo() {
   const [produtos, setProdutos] = useState([]);
@@ -14,16 +14,13 @@ function Catalogo() {
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/categorias/`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
+        const data = await buscarJson(`${API_BASE_URL}/api/categorias/`);
         setCategorias(data);
       } catch (error) {
         console.error('Erro ao processar categorias:', error);
       }
     }
-    fetchCategorias();
+    void fetchCategorias();
   }, []);
 
   useEffect(() => {
@@ -35,23 +32,18 @@ function Catalogo() {
       setError(null);
       try {
         const url = new URL(`${API_BASE_URL}/api/produtos/`);
-        if (idCategoria) url.searchParams.append('categoria', idCategoria);
+        if (idCategoria)
+          url.searchParams.append('categoria', String(idCategoria));
         if (termoBusca) url.searchParams.append('search', termoBusca);
 
-        const response = await fetch(url.toString(), { signal });
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-
-        console.log('Buscando produtos com URL:', url);
-
-        const data = await response.json();
+        const data = await buscarJson(url.toString(), signal);
 
         if (!signal.aborted) {
           setProdutos(data);
           setIsLoading(false);
         }
       } catch (err) {
-        if (err.name == 'AbortError') {
+        if (err.name === 'AbortError') {
           console.log('Requisição abortada');
           return;
         }
@@ -63,7 +55,7 @@ function Catalogo() {
       }
     }
     const timerId = setTimeout(() => {
-      fetchProdutos();
+      void fetchProdutos();
     }, 700);
     return () => {
       clearTimeout(timerId);
@@ -73,7 +65,7 @@ function Catalogo() {
 
   return (
     <>
-      <div className='col-span-1 lg:col-span-4 bg-gradient-to-br from-blue-800 to-cyan-500 mb-4 pb-4 text-center'>
+      <div className='col-span-1 lg:col-span-4 bg-linear-to-br from-blue-800 to-cyan-500 mb-4 pb-4 text-center'>
         <h1 className='text-5xl md:text-4xl font-black text-white drop-shadow-md'>
           Catálogo de <span className='text-yellow-400'>Produtos</span>
         </h1>
