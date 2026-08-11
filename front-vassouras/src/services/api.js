@@ -5,7 +5,10 @@ export const API_BASE_URL = urlDoAmbiente.replace(/\/$/, '');
 export async function buscarJson(url, signal) {
     const response = await fetch(url, {signal});
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // O status vai no erro porque quem chama precisa separar 404 de falha de rede.
+        const erro = new Error(`HTTP error! status: ${response.status}`);
+        erro.status = response.status;
+        throw erro;
     }
     return response.json();
 }
