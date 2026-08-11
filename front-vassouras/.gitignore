@@ -12,6 +12,21 @@ dist
 dist-ssr
 *.local
 
+# Variaveis de ambiente. Tambem ignorado pelo .gitignore da raiz; repetido aqui
+# porque este arquivo e o unico que viaja junto se a pasta virar repositorio proprio.
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Porta local do IDE, muda a cada sessao.
+.mcp.json
+
+# Preferencia de maquina. O settings.json ao lado e versionado de proposito:
+# e ele que carrega o hook de lint para qualquer clone.
+.claude/settings.local.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
