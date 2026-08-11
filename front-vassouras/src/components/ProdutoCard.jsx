@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {formatarPreco} from '../utils/formatarPreco.js';
 
 const ProdutoCard = ({produto}) => {
     return (
@@ -23,7 +24,7 @@ const ProdutoCard = ({produto}) => {
                 </h2>
 
                 <p className='text-blue-600 font-bold mt-2 text-sm sm:text-base'>
-                    R$ {produto.preco}
+                    {formatarPreco(produto.preco)}
                 </p>
             </div>
         </Link>

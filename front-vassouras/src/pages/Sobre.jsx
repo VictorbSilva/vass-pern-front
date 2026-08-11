@@ -24,7 +24,7 @@ function Sobre() {
       </div>
 
       <div className='CardsContainer grid grid-cols-1 md:grid-cols-3 gap-8 mt-10'>
-        <div className='relative bg-color-neutral-300 rounded-[35px] pt-[40px] px-[30px] pb-[30px] text-center text-white flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
+        <div className='relative bg-neutral-300 rounded-[35px] pt-[40px] px-[30px] pb-[30px] text-center flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
           <h2 className='text-3xl font-bold text-blue-500'>Missão</h2>
           <p className='text-zinc-600 font-bold leading-relaxed'>
             Nossa missão é fornecer vassouras de alta qualidade que atendam às
@@ -33,7 +33,7 @@ function Sobre() {
           </p>
         </div>
 
-        <div className='relative bg-color-neutral-300   rounded-[35px] pt-[40px] px-[30px] pb-[70px] text-center text-white flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
+        <div className='relative bg-neutral-300 rounded-[35px] pt-[40px] px-[30px] pb-[70px] text-center flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
           <h2 className='text-3xl font-bold text-blue-500'>Visão</h2>
           <p className='text-zinc-600 font-bold leading-relaxed'>
             Ser reconhecida como a principal fabricante de vassouras no mercado,
@@ -42,7 +42,7 @@ function Sobre() {
           </p>
         </div>
 
-        <div className='relative bg-color-neutral-300 rounded-[35px] pt-[40px] px-[30px] pb-[30px] text-center text-white flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
+        <div className='relative bg-neutral-300 rounded-[35px] pt-[40px] px-[30px] pb-[30px] text-center flex flex-col items-center gap-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105'>
           <h2 className='text-3xl font-bold text-blue-500'>Valores</h2>
           <ul className='text-left text-zinc-800 space-y-2'>
             <li className='font-bold text-zinc-600 leading-relaxed'>

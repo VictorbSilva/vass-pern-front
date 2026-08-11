@@ -24,10 +24,7 @@ function Home() {
           setIsLoading(false);
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Requisição abortada');
-          return;
-        }
+        if (error.name === 'AbortError') return;
         if (!signal.aborted) {
           setError('Erro ao carregar produtos.');
           setIsLoading(false);
