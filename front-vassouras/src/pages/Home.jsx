@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import ProdutosRow from '../components/ProdutosRow';
 import { useState, useEffect } from 'react';
-import { API_BASE_URL } from '../services/api.js';
+import { API_BASE_URL, buscarJson } from '../services/api.js';
+import { embaralhar } from '../utils/embaralhar.js';
 
 function Home() {
   const [produtos, setProdutos] = useState([]);
@@ -16,15 +17,8 @@ function Home() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/api/produtos/`, {
-          signal,
-        });
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        const produtosSelecionados = [...data]
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 10);
+        const data = await buscarJson(`${API_BASE_URL}/api/produtos/`, signal);
+        const produtosSelecionados = embaralhar(data).slice(0, 10);
         if (!signal.aborted) {
           setProdutos(produtosSelecionados);
           setIsLoading(false);
@@ -41,7 +35,7 @@ function Home() {
         }
       }
     }
-    fetchProdutos();
+    void fetchProdutos();
     return () => {
       controller.abort();
     };
