@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/lint-stop.mjs",
+            "timeout": 120,
+            "statusMessage": "Rodando npm run lint"
+          }
+        ]
+      }
+    ]
+  }
+}
