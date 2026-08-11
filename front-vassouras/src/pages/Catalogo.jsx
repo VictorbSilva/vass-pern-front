@@ -10,17 +10,31 @@ function Catalogo() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [erroCategorias, setErroCategorias] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchCategorias() {
+      setErroCategorias(null);
       try {
-        const data = await buscarJson(`${API_BASE_URL}/api/categorias/`);
-        setCategorias(data);
+        const data = await buscarJson(
+          `${API_BASE_URL}/api/categorias/`,
+          signal
+        );
+        if (!signal.aborted) setCategorias(data);
       } catch (error) {
-        console.error('Erro ao processar categorias:', error);
+        if (error.name === 'AbortError') return;
+        if (!signal.aborted) {
+          setErroCategorias('Não foi possível carregar as categorias.');
+          console.error('Erro ao processar categorias:', error);
+        }
       }
     }
     void fetchCategorias();
+
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
@@ -43,10 +57,7 @@ function Catalogo() {
           setIsLoading(false);
         }
       } catch (err) {
-        if (err.name === 'AbortError') {
-          console.log('Requisição abortada');
-          return;
-        }
+        if (err.name === 'AbortError') return;
         if (!signal.aborted) {
           setError('Erro ao carregar produtos.');
           setIsLoading(false);
@@ -69,7 +80,7 @@ function Catalogo() {
         <h1 className='text-5xl md:text-4xl font-black text-white drop-shadow-md'>
           Catálogo de <span className='text-yellow-400'>Produtos</span>
         </h1>
-        <p className='text-lg md:text-xl text-white/90 mt-2 max-w-1xl mx-auto leading-relaxed'>
+        <p className='text-lg md:text-xl text-white/90 mt-2 max-w-xl mx-auto leading-relaxed'>
           Encontre as melhores opções para o seu negócio.
         </p>
       </div>
@@ -94,6 +105,10 @@ function Catalogo() {
           >
             Todos
           </button>
+
+          {erroCategorias && (
+            <p className='px-4 py-3 text-sm text-red-500'>{erroCategorias}</p>
+          )}
 
           {categorias.map((categoria) => (
             <button
@@ -130,7 +145,9 @@ function Catalogo() {
           {!isLoading && !error && produtos.length > 0 && (
             <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
               {produtos.map((produto) => (
-                <ProdutoCard key={produto.id} produto={produto} />
+                <li key={produto.id}>
+                  <ProdutoCard produto={produto} />
+                </li>
               ))}
             </ul>
           )}

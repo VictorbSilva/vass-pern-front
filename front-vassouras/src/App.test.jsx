@@ -18,6 +18,7 @@ describe('App', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    window.history.pushState({}, '', '/');
   });
 
   it('deve montar a aplicacao sem erro', async () => {
@@ -27,5 +28,15 @@ describe('App', () => {
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
 
     await waitFor(() => expect(fetch).toHaveBeenCalled());
+  });
+
+  it('deve exibir a pagina de nao encontrada numa rota que nao existe', () => {
+    window.history.pushState({}, '', '/rota-que-nao-existe');
+
+    render(<App />);
+
+    expect(screen.getByText('Página não encontrada')).toBeInTheDocument();
+    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 });

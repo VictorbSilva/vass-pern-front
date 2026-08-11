@@ -87,10 +87,7 @@ function Contatos() {
                         WhatsApp. Respondemos em média em até 30 minutos.
                     </p>
 
-                    <BotaoWhatsapp
-                        produto={null}
-                        className='self-start bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform hover:scale-105 flex items-center gap-2'
-                    />
+                    <BotaoWhatsapp produto={null}/>
                 </div>
             </div>
 

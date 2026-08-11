@@ -4,6 +4,7 @@ import BotaoWhatsapp from '../components/BotaoWhatsapp';
 import ProdutosRow from '../components/ProdutosRow.jsx';
 import {API_BASE_URL, buscarJson} from '../services/api.js';
 import {embaralhar} from '../utils/embaralhar.js';
+import {formatarPreco} from '../utils/formatarPreco.js';
 
 function ProdutoDetalhe() {
     const {id} = useParams();
@@ -11,11 +12,16 @@ function ProdutoDetalhe() {
     const [erro, setErro] = useState(null);
     const [tentativa, setTentativa] = useState(0);
     const [relacionados, setRelacionados] = useState([]);
-    const [loadingRelacionados, setLoadingRelacionados] = useState(false);
 
     useEffect(() => {
         const controller = new AbortController();
 
+        // Este reset limpa o produto velho ao trocar de id E limpa o erro no retry
+        // (tentativa e dependencia do efeito). Tirar os dois exige remontar por key ou
+        // derivar o estado, e as duas saidas quebram o retry. Fica para o CP5, que ja
+        // reescreve a navegacao da PDP. A regra so aparece desde que o estado morto
+        // loadingRelacionados saiu daqui e a analise parou de fazer bailout.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setProduto(null);
         setErro(null);
         window.scrollTo(0, 0);
@@ -46,7 +52,6 @@ function ProdutoDetalhe() {
         const controller = new AbortController();
 
         async function fetchRelacionados() {
-            setLoadingRelacionados(true);
             try {
                 const data = await buscarJson(
                     `${API_BASE_URL}/api/produtos/?categoria=${produto.categoria}`,
@@ -60,8 +65,6 @@ function ProdutoDetalhe() {
                 if (error.name !== 'AbortError') {
                     console.error('Erro ao buscar produtos relacionados:', error);
                 }
-            } finally {
-                setLoadingRelacionados(false);
             }
         }
 
@@ -69,13 +72,6 @@ function ProdutoDetalhe() {
 
         return () => controller.abort();
     }, [produto?.categoria, produto?.id]);
-
-    const formatarPreco = (valor) => {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        }).format(valor);
-    };
 
     if (erro) {
         const naoEncontrado = erro === 'nao-encontrado';
@@ -149,12 +145,8 @@ function ProdutoDetalhe() {
                 </div>
             </div>
 
-            {(loadingRelacionados || relacionados.length > 0) && (
-                <ProdutosRow
-                    titulo='Veja também'
-                    produtos={relacionados}
-                    loading={loadingRelacionados}
-                />
+            {relacionados.length > 0 && (
+                <ProdutosRow titulo='Veja também' produtos={relacionados}/>
             )}
         </div>
     );
