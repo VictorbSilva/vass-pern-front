@@ -39,4 +39,20 @@ describe('App', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
+
+  it('deve ter um unico h1 na home', async () => {
+    render(<App />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+  });
+
+  it('deve ter um unico h1 na pagina de nao encontrada', () => {
+    window.history.pushState({}, '', '/rota-que-nao-existe');
+
+    render(<App />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+  });
 });

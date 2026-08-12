@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import Logo from './Logo.jsx';
 
 const getNavClasses = (isActive) => {
   const baseClasses =
@@ -26,7 +27,7 @@ function Header() {
     <header className='relative bg-white shadow-sm sticky top-0 z-50'>
       <div className='headercontainer mx-auto flex items-center justify-between px-6 py-4'>
         <Link to='/'>
-          <h1 className='text-2xl font-bold'>Logo</h1>
+          <Logo reduzida className='h-14 w-auto' />
         </Link>
 
         <ul className='hidden md:flex space-x-8'>
