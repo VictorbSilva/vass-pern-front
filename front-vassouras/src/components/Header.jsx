@@ -27,7 +27,7 @@ function Header() {
     <header className='relative bg-white shadow-sm sticky top-0 z-50'>
       <div className='headercontainer mx-auto flex items-center justify-between px-6 py-4'>
         <Link to='/'>
-          <Logo reduzida className='h-14 w-auto' />
+          <Logo className='h-16 w-auto' />
         </Link>
 
         <ul className='hidden md:flex space-x-8'>
