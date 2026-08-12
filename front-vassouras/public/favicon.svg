@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Vassouras Pernambucanas">
+  <title>Vassouras Pernambucanas</title>
+
+  <defs>
+    <clipPath id="recorte-pe">
+      <path d="M6,49 C4,33 10,23 22,20 L48,17 L70,23 L88,15 L112,20 L132,12 L150,20 L164,4 L180,15 L200,9 L216,20 L232,12 L244,25 L258,15 L276,20 L296,12 L318,17 L338,12 C352,15 360,25 360,41 L356,63 C354,76 344,84 332,81 L308,84 L286,76 L262,86 L240,81 L216,94 L194,89 L172,102 L150,97 L128,110 L106,105 L84,118 C66,126 46,121 32,105 C18,92 8,70 6,49 Z"/>
+    </clipPath>
+  </defs>
+
+  <rect width="400" height="400" rx="64" fill="#1D4ED8"/>
+
+  <g transform="translate(4, 130) scale(1.08)">
+    <g clip-path="url(#recorte-pe)">
+      <rect width="364" height="70" fill="#002776"/>
+      <rect y="70" width="364" height="60" fill="#FFFFFF"/>
+
+      <path d="M-14,58 Q182,-30 378,58" fill="none" stroke="#C8102E" stroke-width="10"/>
+      <path d="M-14,68 Q182,-20 378,68" fill="none" stroke="#F5C400" stroke-width="10"/>
+      <path d="M-14,78 Q182,-10 378,78" fill="none" stroke="#009639" stroke-width="10"/>
+
+      <path d="M197,55 L189.7,57.1 L195,62.5 L187.7,60.7 L189.5,68 L184.1,62.7 L182,70 L179.9,62.7 L174.5,68 L176.3,60.7 L169,62.5 L174.3,57.1 L167,55 L174.3,52.9 L169,47.5 L176.3,49.3 L174.5,42 L179.9,47.3 L182,40 L184.1,47.3 L189.5,42 L187.7,49.3 L195,47.5 L189.7,52.9 Z" fill="#F5C400"/>
+      <circle cx="182" cy="55" r="9" fill="#F5C400"/>
+
+      <path d="M178,76 L186,76 L186,81 L197,81 L197,89 L186,89 L186,96 L178,96 L178,89 L167,89 L167,81 L178,81 Z" fill="#C8102E"/>
+    </g>
+
+    <path d="M6,49 C4,33 10,23 22,20 L48,17 L70,23 L88,15 L112,20 L132,12 L150,20 L164,4 L180,15 L200,9 L216,20 L232,12 L244,25 L258,15 L276,20 L296,12 L318,17 L338,12 C352,15 360,25 360,41 L356,63 C354,76 344,84 332,81 L308,84 L286,76 L262,86 L240,81 L216,94 L194,89 L172,102 L150,97 L128,110 L106,105 L84,118 C66,126 46,121 32,105 C18,92 8,70 6,49 Z" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  </g>
+</svg>
