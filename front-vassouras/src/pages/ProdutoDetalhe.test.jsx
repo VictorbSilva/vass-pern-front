@@ -27,6 +27,11 @@ function renderizar() {
       <Routes>
         <Route path='/produto/:id' element={<ProdutoDetalhe />} />
         <Route path='/produtos' element={<h2>Pagina do catalogo</h2>} />
+        <Route path='/produtos/todos' element={<h2>Todos os produtos</h2>} />
+        <Route
+          path='/produtos/:categoriaId'
+          element={<h2>Pagina da categoria</h2>}
+        />
       </Routes>
     </MemoryRouter>
   );
@@ -49,6 +54,36 @@ describe('ProdutoDetalhe', () => {
     renderizar();
 
     expect(await screen.findByText('Vassoura de Piaçava')).toBeInTheDocument();
+  });
+
+  // O produto ja traz a categoria dele, entao "Voltar" cai de onde o visitante
+  // veio. Com o catalogo em duas etapas, mandar para /produtos devolveria o
+  // visitante para a escolha de categoria — um passo atras do que ele fez.
+  it('deve voltar para a categoria do produto', async () => {
+    fetch.mockImplementation((url) =>
+      String(url).includes('?categoria=') ? resposta([]) : resposta(PRODUTO)
+    );
+
+    renderizar();
+
+    await screen.findByText('Vassoura de Piaçava');
+
+    expect(screen.getByRole('link', { name: /voltar/i })).toHaveAttribute(
+      'href',
+      '/produtos/2'
+    );
+  });
+
+  it('deve levar do erro para o catalogo inteiro', async () => {
+    fetch.mockImplementation(() => resposta({ detail: 'nao encontrado' }, 404));
+
+    renderizar();
+
+    await screen.findByText(/não encontrado/i);
+
+    expect(
+      screen.getByRole('link', { name: /ver todos os produtos/i })
+    ).toHaveAttribute('href', '/produtos/todos');
   });
 
   it('deve exibir nao encontrado quando a api responde 404', async () => {

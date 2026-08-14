@@ -55,4 +55,24 @@ describe('App', () => {
 
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   });
+
+  it('deve ter um unico h1 na tela de categorias', async () => {
+    window.history.pushState({}, '', '/produtos');
+
+    render(<App />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+  });
+
+  it('deve ter um unico h1 nos produtos de uma categoria', async () => {
+    window.history.pushState({}, '', '/produtos/3');
+
+    render(<App />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+  });
 });
