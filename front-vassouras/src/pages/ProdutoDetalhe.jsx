@@ -96,7 +96,7 @@ function ProdutoDetalhe() {
                         Tentar novamente
                     </button>
                 )}
-                <Link to='/produtos' className='text-blue-600 underline'>
+                <Link to='/produtos/todos' className='text-blue-600 underline'>
                     Ver todos os produtos
                 </Link>
             </div>
@@ -109,7 +109,12 @@ function ProdutoDetalhe() {
 
     return (
         <div className='ProdutoContainer bg-gray-100 rounded-lg max-w-6xl mx-auto p-6'>
-            <Link to='/produtos' className='inline-block mb-6'>
+            {/* Volta para a categoria de onde o visitante veio; /produtos agora
+                e a escolha de categoria, um passo atras do que ele fez. */}
+            <Link
+                to={produto.categoria ? `/produtos/${produto.categoria}` : '/produtos'}
+                className='inline-block mb-6'
+            >
                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
                     Voltar
                 </button>

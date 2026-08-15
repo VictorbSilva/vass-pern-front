@@ -83,7 +83,7 @@ const ProdutosRow = ({titulo, produtos}) => {
                 <h2 className='text-2xl font-bold text-yellow-500'>{titulo}</h2>
 
                 <Link
-                    to='/produtos'
+                    to='/produtos/todos'
                     className='bg-yellow-400 text-blue-900 font-bold text-sm py-2 px-5 rounded-xl shadow hover:bg-yellow-300 transition-transform hover:scale-105'
                 >
                     Ver todos →

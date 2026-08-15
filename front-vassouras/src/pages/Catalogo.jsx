@@ -1,41 +1,84 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import ProdutoCard from '../components/ProdutoCard.jsx';
 import { API_BASE_URL, buscarJson } from '../services/api.js';
 
-function Catalogo() {
-  const [produtos, setProdutos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [idCategoria, setIdCategoria] = useState(null);
-  const [termoBusca, setTermoBusca] = useState('');
+const MS_DEBOUNCE_BUSCA = 700;
 
+function Catalogo() {
+  // undefined na rota /produtos/todos, que o App.jsx registra separada da rota
+  // dinamica. E por isso que a string 'todos' nao aparece na logica daqui.
+  const { categoriaId } = useParams();
+
+  // O resultado carrega o id que o produziu para ser DERIVADO na rota atual.
+  // A alternativa era limpar o estado dentro do efeito ao trocar de categoria,
+  // que e o que ProdutoDetalhe faz e o que obrigou o eslint-disable de la.
+  const [resultadoCategoria, setResultadoCategoria] = useState(null);
+  // O `Boolean(resultadoCategoria) &&` nao e redundante: em /produtos/todos o
+  // categoriaId e undefined, e o optional chaining de um resultado nulo tambem
+  // da undefined — sem a guarda os dois batem e a rota sem categoria se declara
+  // dona de um resultado que nao existe.
+  const daRotaAtual =
+    Boolean(resultadoCategoria) && resultadoCategoria.id === categoriaId;
+  const categoria = daRotaAtual ? resultadoCategoria.dados : null;
+  const categoriaNaoEncontrada = daRotaAtual && resultadoCategoria.naoEncontrada;
+
+  const [produtos, setProdutos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [erroCategorias, setErroCategorias] = useState(null);
+
+  const [termoBusca, setTermoBusca] = useState('');
+  const [termoBuscado, setTermoBuscado] = useState('');
+
+  // O debounce mora sozinho neste efeito, e nao no que busca os produtos: e o
+  // que faz a digitacao esperar 700ms e a troca de categoria nao esperar nada.
+  // Antes um unico timer cobria os dois, e clicar em categoria custava 700ms.
+  useEffect(() => {
+    const timerId = setTimeout(
+      () => setTermoBuscado(termoBusca),
+      MS_DEBOUNCE_BUSCA
+    );
+
+    return () => clearTimeout(timerId);
+  }, [termoBusca]);
 
   useEffect(() => {
+    if (!categoriaId) return;
+
     const controller = new AbortController();
     const signal = controller.signal;
 
-    async function fetchCategorias() {
-      setErroCategorias(null);
+    async function fetchCategoria() {
       try {
         const data = await buscarJson(
-          `${API_BASE_URL}/api/categorias/`,
+          `${API_BASE_URL}/api/categorias/${categoriaId}/`,
           signal
         );
-        if (!signal.aborted) setCategorias(data);
+        if (!signal.aborted) {
+          setResultadoCategoria({
+            id: categoriaId,
+            dados: data,
+            naoEncontrada: false,
+          });
+        }
       } catch (error) {
         if (error.name === 'AbortError') return;
         if (!signal.aborted) {
-          setErroCategorias('Não foi possível carregar as categorias.');
-          console.error('Erro ao processar categorias:', error);
+          // So o 404 daqui distingue categoria inexistente de categoria vazia:
+          // /api/produtos/?categoria=999 responde 200 com o catalogo inteiro.
+          setResultadoCategoria({
+            id: categoriaId,
+            dados: null,
+            naoEncontrada: error.status === 404,
+          });
+          console.error('Erro ao processar a categoria:', error);
         }
       }
     }
-    void fetchCategorias();
+    void fetchCategoria();
 
     return () => controller.abort();
-  }, []);
+  }, [categoriaId]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -46,9 +89,8 @@ function Catalogo() {
       setError(null);
       try {
         const url = new URL(`${API_BASE_URL}/api/produtos/`);
-        if (idCategoria)
-          url.searchParams.append('categoria', String(idCategoria));
-        if (termoBusca) url.searchParams.append('search', termoBusca);
+        if (categoriaId) url.searchParams.append('categoria', categoriaId);
+        if (termoBuscado) url.searchParams.append('search', termoBuscado);
 
         const data = await buscarJson(url.toString(), signal);
 
@@ -56,102 +98,93 @@ function Catalogo() {
           setProdutos(data);
           setIsLoading(false);
         }
-      } catch (err) {
-        if (err.name === 'AbortError') return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
         if (!signal.aborted) {
           setError('Erro ao carregar produtos.');
           setIsLoading(false);
-          console.error('Erro ao processar produtos:', err);
+          console.error('Erro ao processar produtos:', error);
         }
       }
     }
-    const timerId = setTimeout(() => {
-      void fetchProdutos();
-    }, 700);
-    return () => {
-      clearTimeout(timerId);
-      controller.abort();
-    };
-  }, [idCategoria, termoBusca]);
+    void fetchProdutos();
+
+    return () => controller.abort();
+  }, [categoriaId, termoBuscado]);
+
+  if (categoriaNaoEncontrada) {
+    return (
+      <div className='p-10 text-center flex flex-col items-center gap-4'>
+        <h1 className='text-2xl font-bold text-gray-900'>
+          Categoria não encontrada
+        </h1>
+        <p className='text-gray-600'>
+          Esta categoria pode ter saído do catálogo.
+        </p>
+        <Link to='/produtos' className='text-blue-600 underline'>
+          Ver todas as categorias
+        </Link>
+      </div>
+    );
+  }
+
+  const titulo =
+    categoria?.nome ?? (categoriaId ? 'Produtos' : 'Todos os Produtos');
 
   return (
     <>
-      <div className='col-span-1 lg:col-span-4 bg-linear-to-br from-blue-800 to-cyan-500 mb-4 pb-4 text-center'>
+      <div className='bg-linear-to-br from-blue-800 to-cyan-500 mb-4 pb-4 text-center'>
         <h1 className='text-5xl md:text-4xl font-black text-white drop-shadow-md'>
-          Catálogo de <span className='text-yellow-400'>Produtos</span>
+          {titulo}
         </h1>
         <p className='text-lg md:text-xl text-white/90 mt-2 max-w-xl mx-auto leading-relaxed'>
           Encontre as melhores opções para o seu negócio.
         </p>
       </div>
-      <div className='CatalogoContainer p-4 grid grid-cols-1 lg:grid-cols-4 gap-8'>
-        <aside className='col-span-1 flex flex-col mb-8 overflow-x-auto pb-2 px-4   '>
-          <div className='InputContainer pb-6 border-b border-gray-200'>
-            <input
-              type='text'
-              placeholder='Buscar produtos...'
-              value={termoBusca}
-              onChange={(e) => setTermoBusca(e.target.value)}
-              className='mt-1 w-full bg-white text-gray-700 placeholder:text-gray-500 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors'
-            />
-          </div>
-          <button
-            onClick={() => setIdCategoria(null)}
-            className={`w-full text-left px-4 py-3 rounded-lg transition-colors border-l-4 cursor-pointer ${
-              idCategoria === null
-                ? 'bg-blue-50 text-blue-700 border-blue-600 font-bold'
-                : 'border-transparent text-gray-600 hover:bg-gray-100'
-            }`}
+
+      <div className='CatalogoContainer p-4 max-w-6xl mx-auto'>
+        <div className='flex flex-col sm:flex-row sm:items-center gap-4 mb-8'>
+          <Link
+            to='/produtos'
+            className='shrink-0 text-blue-600 hover:text-blue-800 underline'
           >
-            Todos
-          </button>
+            ← Todas as categorias
+          </Link>
 
-          {erroCategorias && (
-            <p className='px-4 py-3 text-sm text-red-500'>{erroCategorias}</p>
-          )}
+          <input
+            type='text'
+            placeholder='Buscar produtos...'
+            value={termoBusca}
+            onChange={(e) => setTermoBusca(e.target.value)}
+            className='w-full bg-white text-gray-700 placeholder:text-gray-500 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors'
+          />
+        </div>
 
-          {categorias.map((categoria) => (
-            <button
-              key={categoria.id}
-              onClick={() => setIdCategoria(categoria.id)}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors border-l-4 cursor-pointer ${
-                idCategoria === categoria.id
-                  ? 'bg-blue-50 text-blue-700 border-blue-600 font-bold'
-                  : 'border-transparent text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              {categoria.nome}
-            </button>
-          ))}
-        </aside>
+        {isLoading && (
+          <div className='text-center text-blue-500 my-10 font-bold'>
+            Carregando produtos...
+          </div>
+        )}
 
-        <main className='col-span-1 lg:col-span-3'>
-          {isLoading && (
-            <div className='text-center text-blue-500 my-10 font-bold'>
-              Carregando produtos...
-            </div>
-          )}
+        {!isLoading && error && (
+          <div className='text-center text-red-500 my-10'>{error}</div>
+        )}
 
-          {!isLoading && error && (
-            <div className='text-center text-red-500 my-10'>{error}</div>
-          )}
+        {!isLoading && !error && produtos.length === 0 && (
+          <div className='text-center text-gray-500 my-10 font-bold'>
+            Nenhum produto encontrado.
+          </div>
+        )}
 
-          {!isLoading && !error && produtos.length === 0 && (
-            <div className='text-center text-gray-500 mt-10 font-bold'>
-              Nenhum produto encontrado.
-            </div>
-          )}
-
-          {!isLoading && !error && produtos.length > 0 && (
-            <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
-              {produtos.map((produto) => (
-                <li key={produto.id}>
-                  <ProdutoCard produto={produto} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </main>
+        {!isLoading && !error && produtos.length > 0 && (
+          <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
+            {produtos.map((produto) => (
+              <li key={produto.id}>
+                <ProdutoCard produto={produto} />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </>
   );
