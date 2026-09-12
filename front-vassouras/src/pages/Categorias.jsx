@@ -3,11 +3,6 @@ import { Link } from 'react-router-dom';
 import CategoriaCard from '../components/CategoriaCard.jsx';
 import { API_BASE_URL, buscarJson } from '../services/api.js';
 
-// Estes cards sao a primeira dobra de /produtos, que e justamente a pagina onde
-// o passo 8 da secao 7 manda rerodar o Lighthouse. Dar lazy na candidata a LCP
-// piora exatamente a nota que se quer proteger, entao os de cima ficam eager.
-const CARDS_ACIMA_DA_DOBRA = 4;
-
 function Categorias() {
   const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,12 +66,9 @@ function Categorias() {
 
         {!isLoading && !error && categorias.length > 0 && (
           <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
-            {categorias.map((categoria, indice) => (
+            {categorias.map((categoria) => (
               <li key={categoria.id}>
-                <CategoriaCard
-                  categoria={categoria}
-                  prioritaria={indice < CARDS_ACIMA_DA_DOBRA}
-                />
+                <CategoriaCard categoria={categoria} />
               </li>
             ))}
           </ul>
