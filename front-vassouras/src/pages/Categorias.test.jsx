@@ -44,26 +44,29 @@ describe('Categorias', () => {
     );
   });
 
-  it('deve renderizar a foto da categoria que tem imagem', async () => {
+  // A fixture de Escovas TEM foto de proposito. As fotos do catalogo sao fichas
+  // tecnicas em fundo branco, que num card 4:3 leem como pagina de catalogo
+  // escaneada — a decisao foi icone em todo card, e este teste prova que o campo
+  // e ignorado mesmo quando esta preenchido.
+  it('nunca deve renderizar foto, nem na categoria que tem imagem', async () => {
     renderizar();
 
-    expect(await screen.findByRole('img', { name: 'Escovas' })).toHaveAttribute(
-      'src',
-      'https://exemplo/escovas'
-    );
+    await screen.findByRole('link', { name: /escovas/i });
+
+    expect(screen.queryAllByRole('img')).toHaveLength(0);
   });
 
-  // Metade das categorias em producao esta sem foto, entao o fallback e o caminho
-  // normal e nao a excecao. O que ele nao pode virar e uma <img> apontando para
-  // null, que o navegador desenha como icone quebrado.
-  it('nao deve renderizar imagem na categoria sem foto', async () => {
+  it('deve dar icones diferentes a categorias diferentes', async () => {
     renderizar();
 
-    await screen.findByRole('link', { name: /vassouras/i });
+    const escovas = await screen.findByRole('link', { name: /escovas/i });
+    const vassouras = screen.getByRole('link', { name: /vassouras/i });
 
-    const imagens = screen.getAllByRole('img');
-    expect(imagens).toHaveLength(1);
-    expect(imagens[0]).toHaveAccessibleName('Escovas');
+    const svgDe = (link) => link.querySelector('svg')?.innerHTML;
+
+    expect(svgDe(escovas)).toBeTruthy();
+    expect(svgDe(vassouras)).toBeTruthy();
+    expect(svgDe(escovas)).not.toBe(svgDe(vassouras));
   });
 
   it('deve oferecer a saida para o catalogo inteiro', async () => {
