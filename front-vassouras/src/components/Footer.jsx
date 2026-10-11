@@ -68,9 +68,11 @@ function Footer() {
                         </li>
                         <li className='flex items-center gap-3'>
                             <Mail className='w-5 h-5 text-blue-500 shrink-0'/>
-                            {/* Sem o min-w-0, o span (flex item) nao encolhe abaixo da
-                                largura do e-mail inteiro e o break-words nunca chega a agir. */}
-                            <span className='min-w-0 break-words'>contato@vassouraspernambucanas.com.br</span>
+                            {/* O <wbr> faz o e-mail quebrar depois do @. O min-w-0 e o
+                                break-words ficam de reserva para quando nem o dominio cabe:
+                                sem o min-w-0, o span (flex item) nao encolhe abaixo do
+                                trecho mais longo e o break-words nunca chega a agir. */}
+                            <span className='min-w-0 break-words'>contato@<wbr/>vassouraspernambucanas.com.br</span>
                         </li>
                     </ul>
                 </address>
