@@ -74,7 +74,12 @@ function Home() {
       <section>
         {isLoading && (
           <div className='flex justify-center items-center py-10'>
-            <div className='loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16'></div>
+            <div
+              role='status'
+              className='w-8 h-8 rounded-full border-4 border-blue-600 border-t-transparent motion-safe:animate-spin'
+            >
+              <span className='sr-only'>Carregando…</span>
+            </div>
           </div>
         )}
         {error && <div className='text-red-500 text-center py-10'>{error}</div>}
