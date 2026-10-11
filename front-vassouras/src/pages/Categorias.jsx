@@ -65,9 +65,16 @@ function Categorias() {
         )}
 
         {!isLoading && !error && categorias.length > 0 && (
-          <ul className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'>
+          // Flex, e nao grid, de proposito: o grid prende o card que sobra na
+          // primeira coluna, e aqui a ultima linha incompleta fica centralizada.
+          // A largura do <li> desconta o gap (gap-3 = 0.75rem, gap-6 = 1.5rem):
+          // mudar o gap sem mudar o calc faz o ultimo card da linha quebrar.
+          <ul className='w-full flex flex-wrap justify-center gap-3 sm:gap-6'>
             {categorias.map((categoria) => (
-              <li key={categoria.id}>
+              <li
+                key={categoria.id}
+                className='w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-6rem)/5)]'
+              >
                 <CategoriaCard categoria={categoria} />
               </li>
             ))}
