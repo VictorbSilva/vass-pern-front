@@ -13,15 +13,17 @@ const CategoriaCard = ({ categoria }) => (
             acessivel do link. */}
         <IconeDaCategoria
           nome={categoria.nome}
-          size={64}
+          size={48}
           strokeWidth={1.5}
           className='text-white/90 group-hover:scale-110 transition-transform duration-300'
           aria-hidden='true'
         />
       </div>
 
-      <h2 className='p-4 text-base sm:text-lg font-bold text-gray-800 text-center'>
-        {categoria.nome}
+      {/* O line-clamp fica no span, e nao no h2: no mesmo elemento do padding,
+          a terceira linha aparece cortada dentro do padding de baixo. */}
+      <h2 className='p-3 text-sm sm:text-base font-bold text-gray-800 text-center'>
+        <span className='line-clamp-2'>{categoria.nome}</span>
       </h2>
     </div>
   </Link>
